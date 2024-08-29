@@ -67,6 +67,7 @@ async def process_callback_button(call: CallbackQuery):
 # Обработчик нажатия на кнопку "Отправить"
 @router.callback_query(lambda c: c.data == 'send')
 async def process_send(call: CallbackQuery):
+    selected_options.clear()
     for button_name, options in button_options.items():
         for row in call.message.reply_markup.inline_keyboard:
             for button in row:
@@ -85,7 +86,6 @@ async def process_send(call: CallbackQuery):
 
     await call.message.edit_reply_markup(reply_markup=None)
     sel[f"{call.from_user.id}"] = selected_options
-    selected_options.clear()
     await call.message.answer(f"Вы выбрали: {sel}")
 
     await call.message.answer("Отправьте фото")
