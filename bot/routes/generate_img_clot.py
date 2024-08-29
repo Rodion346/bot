@@ -85,7 +85,7 @@ async def process_send(call: CallbackQuery):
 
     await call.message.edit_reply_markup(reply_markup=None)
     sel[f"{call.from_user.id}"] = selected_options
-    print(sel)
+    selected_options.clear()
     await call.message.answer(f"Вы выбрали: {sel}")
 
     await call.message.answer("Отправьте фото")
