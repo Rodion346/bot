@@ -118,10 +118,5 @@ async def handle_photo(message: types.Message):
 @router.callback_query(F.data == "smart")
 async def process_start_command(callback: types.CallbackQuery):
     kb = await create_keyboard_clot()
-    r = requests.get(f"https://rodion346-api-ai-bot-1eac.twc1.net/api/v1/user/{callback.message.from_user.id}")
-    re = r.json()
-    balance = re.get("balance")
-    if balance < PRICE_CLOT:
-        await callback.message.answer("Недостаточно средств, пополните баланс!")
     await callback.message.edit_reply_markup(reply_markup=None)
     await callback.message.answer('Задайте все параметры обработки:', reply_markup=kb.as_markup())
