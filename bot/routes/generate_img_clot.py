@@ -115,6 +115,7 @@ async def handle_photo(message: types.Message):
     }
 
     resp = requests.post(url, data=payload, files=files, headers=headers)
+    del sel[f"{message.from_user.id}"]
     print(resp.text)
 
 @router.callback_query(F.data == "smart")
