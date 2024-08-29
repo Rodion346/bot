@@ -82,7 +82,7 @@ async def process_send(call: CallbackQuery):
                             selected_options[button_name] = None
                         else:
                             selected_options[button_name] = tx
-    sel[f"call.message.from_user.id"] = selected_options
+    sel[f"{call.message.from_user.id}"] = selected_options
     await call.message.edit_reply_markup(reply_markup=None)
     await call.message.answer(f"Вы выбрали: {selected_options}")
 
@@ -98,12 +98,12 @@ async def handle_photo(message: types.Message):
 
     files = {"image": (f"{message.from_user.id}", file_bytes)}
     payload = {
-        "age": sel.get(f"message.from_user.id").get("age"),
-        "breast_size": sel.get(f"message.from_user.id").get("breast_size"),
-        "body_type": sel.get(f"message.from_user.id").get("body_type"),
-        "butt_size": sel.get(f"message.from_user.id").get("butt_size"),
-        "cloth": sel.get(f"message.from_user.id").get("cloth"),
-        "pose": sel.get(f"message.from_user.id").get("pose"),
+        "age": sel.get(f"{message.from_user.id}").get("age"),
+        "breast_size": sel.get(f"{message.from_user.id}").get("breast_size"),
+        "body_type": sel.get(f"{message.from_user.id}").get("body_type"),
+        "butt_size": sel.get(f"{message.from_user.id}").get("butt_size"),
+        "cloth": sel.get(f"{message.from_user.id}").get("cloth"),
+        "pose": sel.get(f"{message.from_user.id}").get("pose"),
         "id_gen": f"{message.from_user.id}",
         "webhook": "https://rodion346-api-ai-bot-1eac.twc1.net/webhook"
     }
