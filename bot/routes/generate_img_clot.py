@@ -24,6 +24,7 @@ cloth = {"без одежды": "naked", "бикини": "bikini", "нижнее
          "спортивная одежда": "sport wear", "БДСМ": "bdsm", "латекс": "latex", "учительница": "teacher", "школьница": "schoolgirl"}
 
 selected_options = {}
+sel = {}
 
 
 async def save_temp_file(file_id: str):
@@ -81,8 +82,7 @@ async def process_send(call: CallbackQuery):
                             selected_options[button_name] = None
                         else:
                             selected_options[button_name] = tx
-
-
+sel[call.message.from_user.id] = selected_options
     await call.message.edit_reply_markup(reply_markup=None)  # Убираем кнопки
     await call.message.answer(f"Вы выбрали: {selected_options}")
 
@@ -98,12 +98,12 @@ async def handle_photo(message: types.Message):
 
     files = {"image": (f"{message.from_user.id}", file_bytes)}
     payload = {
-        "age": selected_options.get("age"),
-        "breast_size": selected_options.get("breast_size"),
-        "body_type": selected_options.get("body_type"),
-        "butt_size": selected_options.get("butt_size"),
-        "cloth": selected_options.get("cloth"),
-        "pose": selected_options.get("pose"),
+        "age": sel.get(f"message.from_user.id").get("age"),
+        "breast_size": sel.get(f"message.from_user.id").get("breast_size"),
+        "body_type": sel.get(f"message.from_user.id").get("body_type"),
+        "butt_size": sel.get(f"message.from_user.id").get("butt_size"),
+        "cloth": sel.get(f"message.from_user.id").get("cloth"),
+        "pose": sel.get(f"message.from_user.id").get("pose"),
         "id_gen": f"{message.from_user.id}",
         "webhook": "https://rodion346-api-ai-bot-1eac.twc1.net/webhook"
     }
