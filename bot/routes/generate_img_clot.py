@@ -82,8 +82,8 @@ async def process_send(call: CallbackQuery):
                             selected_options[button_name] = None
                         else:
                             selected_options[button_name] = tx
-sel[call.message.from_user.id] = selected_options
-    await call.message.edit_reply_markup(reply_markup=None)  # Убираем кнопки
+    sel[call.message.from_user.id] = selected_options
+    await call.message.edit_reply_markup(reply_markup=None)
     await call.message.answer(f"Вы выбрали: {selected_options}")
 
     await call.message.answer("Отправьте фото")
