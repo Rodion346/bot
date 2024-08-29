@@ -23,7 +23,7 @@ body = {"маленькая": "small", "нормальная":"normal", "бол�
 cloth = {"без одежды": "naked", "бикини": "bikini", "нижнее белье": "lingerie",
          "спортивная одежда": "sport wear", "БДСМ": "bdsm", "латекс": "latex", "учительница": "teacher", "школьница": "schoolgirl"}
 
-selected_options = {}
+
 sel = {}
 
 
@@ -67,7 +67,7 @@ async def process_callback_button(call: CallbackQuery):
 # Обработчик нажатия на кнопку "Отправить"
 @router.callback_query(lambda c: c.data == 'send')
 async def process_send(call: CallbackQuery):
-    selected_options.clear()
+    selected_options = {}
     for button_name, options in button_options.items():
         for row in call.message.reply_markup.inline_keyboard:
             for button in row:
