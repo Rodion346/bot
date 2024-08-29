@@ -105,7 +105,7 @@ async def handle_photo(message: types.Message):
         "cloth": selected_options.get("cloth"),
         "pose": selected_options.get("pose"),
         "id_gen": f"{message.from_user.id}",
-        "webhook": "rodion346-api-ai-bot-c72c.twc1.net/webhook"
+        "webhook": "rodion346-api-ai-bot-1eac.twc1.net/webhook"
     }
     headers = {
         "accept": "application/json",
