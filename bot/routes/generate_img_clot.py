@@ -3,7 +3,7 @@ from aiogram import Router, F, Bot, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.config import PRICE_CLOT
+from config import PRICE_CLOT
 
 bot = Bot(token='6830235739:AAG0Bo5lnabU4hDVWlhPQmLtiMVePI2xRGg')
 router = Router()

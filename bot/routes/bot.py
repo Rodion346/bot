@@ -18,7 +18,7 @@ def create_keyboard(buttons, columns=2):
 async def process_start_command(message: types.Message):
     referer_id = str(message.text[7:]) if len(message.text) > 7 else "0"
     payload = {"id": f"{message.from_user.id}", "referer_id": referer_id}
-    requests.post("http://fastapi:8000/api/v1/user", json=payload)
+    requests.post("http://127.0.0.1:8000/api/v1/user", json=payload)
     buttons = ["Обработка фото", "Пополнить баланс", "Реферальная программа", "Профиль"]
     keyboard = create_keyboard(buttons, columns=1)
     await message.answer('Привет!', reply_markup=keyboard)
@@ -35,7 +35,7 @@ async def processing_image(message: types.Message):
 
 @start_router.message(F.text == "Профиль")
 async def profile_info(message: types.Message):
-    r = requests.get(f"http://fastapi:8000/api/v1/user/{message.from_user.id}")
+    r = requests.get(f"http://127.0.0.1:8000/api/v1/user/{message.from_user.id}")
     re = r.json()
     id_user = re.get("id")
     balance = re.get("balance")
