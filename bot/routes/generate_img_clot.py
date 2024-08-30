@@ -99,6 +99,7 @@ async def process_send(call: CallbackQuery):
 
 @router.message(F.photo)
 async def handle_photo(message: types.Message):
+    await message.answer(f"{user_state}")
     if user_state[f"{message.from_user.id}"] == "smart":
         file_bytes = await save_temp_file(message.photo[-1].file_id)
         url = "https://public-api.clothoff.io/undress"

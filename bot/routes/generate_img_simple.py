@@ -24,6 +24,7 @@ async def process_start_command(callback: types.CallbackQuery):
 
 @simple_router.message(F.photo)
 async def handle_photo(message: types.Message):
+    await message.answer(f"{user_state}")
     if user_state[f"{message.from_user.id}"] == "simple":
         file_bytes = await save_temp_file(message.photo[-1].file_id)
         header = {'Authorization': 'Bearer zsWQ5mwIh7BvrcoNDbrjU6eU2EvqicvDJdIz8LmZ88225bcf', }
