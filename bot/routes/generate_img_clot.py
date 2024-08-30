@@ -98,7 +98,7 @@ async def process_send(call: CallbackQuery):
 
 @router.callback_query(F.data == "smart")
 async def process_start_command(callback: types.CallbackQuery):
-    user_state[f"{callback.from_user.id}"] = "smart"
+    user_state[callback.from_user.id] = "smart"
     r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
     re = r.json()
     balance = re.get("balance")

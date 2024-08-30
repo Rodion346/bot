@@ -10,7 +10,7 @@ simple_router = Router()
 
 @simple_router.callback_query(F.data == "simple")
 async def process_start_command(callback: types.CallbackQuery):
-    user_state[f"{callback.from_user.id}"] = "simple"
+    user_state[callback.from_user.id] = "simple"
     r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
     re = r.json()
     balance = re.get("balance")
@@ -29,9 +29,9 @@ async def handle_photo(message: types.Message):
         await message.answer("Произошла ошибка: состояние не определено.")
         return
 
-    if user_state[user_id] == 'n8ked':
+    if user_state[user_id] == 'simple':
         await handle_n8ked_photo(message)
-    elif user_state[user_id] == 'clothoff':
+    elif user_state[user_id] == 'smart':
         await handle_clothoff_photo(message)
 
     # Очищаем состояние после обработки
