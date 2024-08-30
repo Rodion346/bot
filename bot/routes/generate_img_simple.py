@@ -2,7 +2,7 @@ import requests
 from aiogram import Router, F, types
 
 from bot.routes.bot import user_state
-from bot.routes.generate_img_clot import save_temp_file
+from bot.routes.generate_img_clot import save_temp_file, sel
 from config import PRICE_SIMPLE, BASE_URL_API
 
 simple_router = Router()
@@ -24,13 +24,48 @@ async def process_start_command(callback: types.CallbackQuery):
 
 @simple_router.message(F.photo)
 async def handle_photo(message: types.Message):
-    await message.answer(f"{user_state}, simp")
-    if user_state[f"{message.from_user.id}"] == "simple":
-        file_bytes = await save_temp_file(message.photo[-1].file_id)
-        header = {'Authorization': 'Bearer zsWQ5mwIh7BvrcoNDbrjU6eU2EvqicvDJdIz8LmZ88225bcf', }
-        task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, data={"image": f"{file_bytes}"})
-        task_id = task_id.json()
-        payload = {"img_id": task_id.get("task_id")}
-        r = requests.post(f"{BASE_URL_API}/api/v1/niked/{message.from_user.id}", json=payload)
-        del user_state[f"{message.from_user.id}"]
-        await message.answer(f"{r}")
+    user_id = message.from_user.id
+    if user_id not in user_state:
+        await message.answer("Произошла ошибка: состояние не определено.")
+        return
+
+    if user_state[user_id] == 'n8ked':
+        await handle_n8ked_photo(message)
+    elif user_state[user_id] == 'clothoff':
+        await handle_clothoff_photo(message)
+
+    # Очищаем состояние после обработки
+    del user_state[user_id]
+
+
+async def handle_n8ked_photo(message: types.Message):
+    file_bytes = await save_temp_file(message.photo[-1].file_id)
+    header = {'Authorization': 'Bearer zsWQ5mwIh7BvrcoNDbrjU6eU2EvqicvDJdIz8LmZ88225bcf', }
+    task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, data={"image": f"{file_bytes}"})
+    task_id = task_id.json()
+    payload = {"img_id": task_id.get("task_id")}
+    r = requests.get(f"{BASE_URL_API}/api/v1/niked/{message.from_user.id}", json=payload)
+
+
+async def handle_clothoff_photo(message: types.Message):
+    file_bytes = await save_temp_file(message.photo[-1].file_id)
+    url = "https://public-api.clothoff.io/undress"
+
+    files = {"image": (f"{message.from_user.id}", file_bytes)}
+    payload = {
+        "age": sel.get(f"{message.from_user.id}").get("age"),
+        "breast_size": sel.get(f"{message.from_user.id}").get("breast_size"),
+        "body_type": sel.get(f"{message.from_user.id}").get("body_type"),
+        "butt_size": sel.get(f"{message.from_user.id}").get("butt_size"),
+        "cloth": sel.get(f"{message.from_user.id}").get("cloth"),
+        "pose": sel.get(f"{message.from_user.id}").get("pose"),
+        "id_gen": f"{message.from_user.id}",
+        "webhook": f"{BASE_URL_API}/webhook"
+    }
+    headers = {
+        "accept": "application/json",
+        "x-api-key": "f5406795d2baab5be031ca82f3ebe1f50da871c3"
+    }
+
+    resp = requests.post(url, data=payload, files=files, headers=headers)
+    del sel[f"{message.from_user.id}"]
