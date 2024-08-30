@@ -96,7 +96,7 @@ async def process_send(call: CallbackQuery):
 @router.message(F.photo)
 async def handle_photo(message: types.Message):
     file_bytes = await save_temp_file(message.photo[-1].file_id)
-    await message.answer(f"{file_bytes}")
+    await message.answer(f"{file_bytes.read()}")
     url = "https://public-api.clothoff.io/undress"
 
     files = {"image": (f"{message.from_user.id}", file_bytes)}
