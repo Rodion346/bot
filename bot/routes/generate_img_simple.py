@@ -9,10 +9,10 @@ simple_router = Router()
 
 @simple_router.callback_query(F.data == "simple")
 async def process_start_command(callback: types.CallbackQuery):
-    r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.message.from_user.id}")
+    r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
     re = r.json()
     balance = re.get("balance")
-    if balance < PRICE_SIMPLE:
+    if int(balance) > PRICE_SIMPLE:
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer('Пришлите фото')
     else:
