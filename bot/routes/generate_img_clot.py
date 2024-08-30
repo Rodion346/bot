@@ -6,16 +6,16 @@ from aiogram import Router, F, Bot, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from config import PRICE_CLOT
+from config import PRICE_CLOT, BASE_URL_API
 
 bot = Bot(token='6830235739:AAG0Bo5lnabU4hDVWlhPQmLtiMVePI2xRGg')
 router = Router()
 
 button_options = {
     'age': ['Возраст - 18', 'Возраст - 20', 'Возраст - 30', 'Возраст - 40', 'Возраст - 50'],
-    'breastSize': ['Размер груди - маленькая', 'Размер груди - нормальная', 'Размер груди - большая'],
-    'bodyType': ['Телосложение - маленькая', 'Телосложение - нормальная', 'Телосложение - большая'],
-    'buttSize': ['Размер попы - маленькая', 'Размер попы - нормальная', 'Размер попы - большая'],
+    'breastSize': ['Размер груди - нормальная', 'Размер груди - маленькая', 'Размер груди - большая'],
+    'bodyType': ['Телосложение - нормальная', 'Телосложение - маленькая', 'Телосложение - большая'],
+    'buttSize': ['Размер попы - нормальная', 'Размер попы - маленькая', 'Размер попы - большая'],
     'cloth': ['Одежда - без одежды', 'Одежда - бикини', 'Одежда - нижнее белье', 'Одежда - спортивная одежда',
               'Одежда - БДСМ', 'Одежда - латекс', 'Одежда - учительница', 'Одежда - школьница'],
     'pose': ['Поза - без позы', 'Поза - Missionary POV', 'Поза - Anal Fuck', 'Поза - Legs up presenting',
@@ -110,7 +110,7 @@ async def handle_photo(message: types.Message):
         "cloth": sel.get(f"{message.from_user.id}").get("cloth"),
         "pose": sel.get(f"{message.from_user.id}").get("pose"),
         "id_gen": f"{message.from_user.id}",
-        "webhook": "https://rodion346-api-ai-bot-1eac.twc1.net/webhook"
+        "webhook": "BASE_URL_API/webhook"
     }
     headers = {
         "accept": "application/json",
@@ -123,6 +123,12 @@ async def handle_photo(message: types.Message):
 
 @router.callback_query(F.data == "smart")
 async def process_start_command(callback: types.CallbackQuery):
-    kb = await create_keyboard_clot()
-    await callback.message.edit_reply_markup(reply_markup=None)
-    await callback.message.answer('Задайте все параметры обработки:', reply_markup=kb.as_markup())
+    r = requests.get(f"BASE_URL_API/api/v1/user/{callback.message.from_user.id}")
+    re = r.json()
+    balance = re.get("balance")
+    if balance < PRICE_CLOT:
+        await callback.message.answer("Недостаточно средств, пополните баланс!")
+    else:
+        kb = await create_keyboard_clot()
+        await callback.message.edit_reply_markup(reply_markup=None)
+        await callback.message.answer('Задайте все параметры обработки:', reply_markup=kb.as_markup())
