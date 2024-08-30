@@ -110,7 +110,7 @@ async def handle_photo(message: types.Message):
         "cloth": sel.get(f"{message.from_user.id}").get("cloth"),
         "pose": sel.get(f"{message.from_user.id}").get("pose"),
         "id_gen": f"{message.from_user.id}",
-        "webhook": "BASE_URL_API/webhook"
+        "webhook": f"{BASE_URL_API}/webhook"
     }
     headers = {
         "accept": "application/json",
@@ -123,7 +123,7 @@ async def handle_photo(message: types.Message):
 
 @router.callback_query(F.data == "smart")
 async def process_start_command(callback: types.CallbackQuery):
-    r = requests.get(f"BASE_URL_API/api/v1/user/{callback.message.from_user.id}")
+    r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.message.from_user.id}")
     re = r.json()
     balance = re.get("balance")
     if balance < PRICE_CLOT:
