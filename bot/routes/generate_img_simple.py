@@ -44,7 +44,7 @@ async def handle_n8ked_photo(message: types.Message):
     task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, json={"image": f"{file_bytes}"})
     task_id = task_id.json()
     payload = {"img_id": task_id.get("task_id"), "user_id": f"{message.from_user.id}"}
-    r = requests.post(f"{BASE_URL_API}/api/v1/niked", params=payload)
+    r = requests.post(f"{BASE_URL_API}/api/v1/niked", json=payload)
 
 
 async def handle_clothoff_photo(message: types.Message):
