@@ -7,9 +7,9 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQu
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.routes.bot import user_state
-from config import PRICE_CLOT, BASE_URL_API
+from config import PRICE_CLOT, BASE_URL_API, TOKEN_BOT
 
-bot = Bot(token='6830235739:AAG0Bo5lnabU4hDVWlhPQmLtiMVePI2xRGg')
+bot = Bot(token=TOKEN_BOT)
 router = Router()
 
 button_options = {
