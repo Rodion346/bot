@@ -12,7 +12,7 @@ async def process_start_command(callback: types.CallbackQuery):
     r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
     re = r.json()
     balance = re.get("balance")
-    if int(balance) > PRICE_SIMPLE:
+    if int(balance) > int(PRICE_SIMPLE):
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer('Пришлите фото')
     else:

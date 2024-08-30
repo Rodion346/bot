@@ -126,7 +126,7 @@ async def process_start_command(callback: types.CallbackQuery):
     r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
     re = r.json()
     balance = re.get("balance")
-    if int(balance) < PRICE_CLOT:
+    if int(balance) < int(PRICE_CLOT):
         await callback.message.answer("Недостаточно средств, пополните баланс!")
     else:
         kb = await create_keyboard_clot()
