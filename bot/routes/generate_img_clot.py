@@ -1,3 +1,4 @@
+import base64
 from venv import logger
 
 import requests
@@ -98,7 +99,7 @@ async def process_send(call: CallbackQuery):
 @router.message(F.photo)
 async def handle_photo(message: types.Message):
     file_bytes = await save_temp_file(message.photo[-1].file_id)
-    logger.info(file_bytes.read())
+    logger.info(base64.b64encode(file_bytes.read()))
     url = "https://public-api.clothoff.io/undress"
 
     files = {"image": (f"{message.from_user.id}", file_bytes)}
