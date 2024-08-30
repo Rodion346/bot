@@ -48,6 +48,7 @@ async def handle_n8ked_photo(message: types.Message):
     header = {'Authorization': 'Bearer zsWQ5mwIh7BvrcoNDbrjU6eU2EvqicvDJdIz8LmZ88225bcf'}
     task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, data={"image": base64_encoded})
     task_id = task_id.json()
+    await message.answer(f"{task_id}")
     payload = {"img_id": task_id.get("task_id"), "user_id": f"{message.from_user.id}"}
     r = requests.post(f"{BASE_URL_API}/api/v1/niked", params=payload)
 
