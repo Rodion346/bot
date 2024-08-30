@@ -41,7 +41,7 @@ async def handle_photo(message: types.Message):
 async def handle_n8ked_photo(message: types.Message):
     file_bytes = await save_temp_file(message.photo[-1].file_id)
     header = {'Authorization': 'Bearer zsWQ5mwIh7BvrcoNDbrjU6eU2EvqicvDJdIz8LmZ88225bcf', }
-    task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, data={"image": f"{file_bytes}"})
+    task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, json={"image": f"{file_bytes}"})
     task_id = task_id.json()
     payload = {"img_id": task_id.get("task_id"), "user_id": f"{message.from_user.id}"}
     r = requests.post(f"{BASE_URL_API}/api/v1/niked", json=payload)
