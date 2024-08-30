@@ -6,6 +6,7 @@ from aiogram import Router, F, Bot, types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from bot.routes.bot import user_state
 from config import PRICE_CLOT, BASE_URL_API
 
 bot = Bot(token='6830235739:AAG0Bo5lnabU4hDVWlhPQmLtiMVePI2xRGg')
@@ -98,31 +99,33 @@ async def process_send(call: CallbackQuery):
 
 @router.message(F.photo)
 async def handle_photo(message: types.Message):
-    file_bytes = await save_temp_file(message.photo[-1].file_id)
-    url = "https://public-api.clothoff.io/undress"
+    if user_state[f"{message.from_user.id}"] == "smart":
+        file_bytes = await save_temp_file(message.photo[-1].file_id)
+        url = "https://public-api.clothoff.io/undress"
 
-    files = {"image": (f"{message.from_user.id}", file_bytes)}
-    payload = {
-        "age": sel.get(f"{message.from_user.id}").get("age"),
-        "breast_size": sel.get(f"{message.from_user.id}").get("breast_size"),
-        "body_type": sel.get(f"{message.from_user.id}").get("body_type"),
-        "butt_size": sel.get(f"{message.from_user.id}").get("butt_size"),
-        "cloth": sel.get(f"{message.from_user.id}").get("cloth"),
-        "pose": sel.get(f"{message.from_user.id}").get("pose"),
-        "id_gen": f"{message.from_user.id}",
-        "webhook": f"{BASE_URL_API}/webhook"
-    }
-    headers = {
-        "accept": "application/json",
-        "x-api-key": "f5406795d2baab5be031ca82f3ebe1f50da871c3"
-    }
+        files = {"image": (f"{message.from_user.id}", file_bytes)}
+        payload = {
+            "age": sel.get(f"{message.from_user.id}").get("age"),
+            "breast_size": sel.get(f"{message.from_user.id}").get("breast_size"),
+            "body_type": sel.get(f"{message.from_user.id}").get("body_type"),
+            "butt_size": sel.get(f"{message.from_user.id}").get("butt_size"),
+            "cloth": sel.get(f"{message.from_user.id}").get("cloth"),
+            "pose": sel.get(f"{message.from_user.id}").get("pose"),
+            "id_gen": f"{message.from_user.id}",
+            "webhook": f"{BASE_URL_API}/webhook"
+        }
+        headers = {
+            "accept": "application/json",
+            "x-api-key": "f5406795d2baab5be031ca82f3ebe1f50da871c3"
+        }
 
-    resp = requests.post(url, data=payload, files=files, headers=headers)
-    del sel[f"{message.from_user.id}"]
-    print(resp.text)
+        resp = requests.post(url, data=payload, files=files, headers=headers)
+        del sel[f"{message.from_user.id}"]
+        print(resp.text)
 
 @router.callback_query(F.data == "smart")
 async def process_start_command(callback: types.CallbackQuery):
+    user_state[f"{callback.from_user.id}"] = "smart"
     r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
     re = r.json()
     balance = re.get("balance")

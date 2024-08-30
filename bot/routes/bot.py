@@ -9,6 +9,7 @@ from config import BASE_URL_API
 
 start_router = Router()
 
+user_state = {}
 
 def create_keyboard(buttons, columns=2):
     keyboard_buttons = []
