@@ -1,11 +1,8 @@
 from pyexpat.errors import messages
 
 import requests
-from aiogram import Router, F, Bot, types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, Message
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-
-from generate_img_clot import bot
+from aiogram import Router
+from aiogram.types import CallbackQuery
 
 router_balance = Router()
 
