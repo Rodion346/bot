@@ -2,6 +2,8 @@ import base64
 
 import requests
 from aiogram import Router, F, types
+from aiogram.types import InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.routes.bot import user_state
 from bot.routes.generate_img_clot import save_temp_file, sel
@@ -18,10 +20,13 @@ async def process_start_command(callback: types.CallbackQuery):
     balance = re.get("balance")
     if int(balance) > int(PRICE_SIMPLE):
         await callback.message.edit_reply_markup(reply_markup=None)
-        await callback.message.answer('Пришлите фото')
+        await callback.message.answer('📷 Пришлите фото для обработки.')
     else:
         await callback.message.edit_reply_markup(reply_markup=None)
-        await callback.message.answer('Недостаточно средств')
+        kb = InlineKeyboardBuilder()
+        Button = InlineKeyboardButton(text='💵 Купить обработки', callback_data="pay_photo")
+        kb.row(Button)
+        await callback.message.answer('💰 Пополните баланс, чтобы начать обработку', reply_markup=kb.as_markup())
 
 
 @simple_router.message(F.photo)
@@ -33,8 +38,10 @@ async def handle_photo(message: types.Message):
 
     if user_state[user_id] == 'simple':
         await handle_n8ked_photo(message)
+        await message.answer("⌛️ Обработка займет примерно 10-15 секунд, после чего бот пришлет вам результат…")
     elif user_state[user_id] == 'smart':
         await handle_clothoff_photo(message)
+        await message.answer("⌛️ Обработка займет примерно 10 секунд, после чего бот пришлет вам результат…")
 
     # Очищаем состояние после обработки
     del user_state[user_id]
