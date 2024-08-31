@@ -23,7 +23,7 @@ def create_service_keyboard(services_with_prices):
     keyboard = InlineKeyboardBuilder()
     for service, price in services_with_prices:
         service_button = InlineKeyboardButton(text=service, callback_data=f"service_{service}")
-        price_button = InlineKeyboardButton(text=f"{price} ₽", callback_data=f"sum_{service}")
+        price_button = InlineKeyboardButton(text=f"{price} ₽", callback_data=f"sum_{price}")
         keyboard.row(service_button, price_button)
 
     return keyboard
