@@ -1,7 +1,7 @@
 from aiogram import Router, F, Bot, types
 
 from aiogram.filters import Command
-from aiogram.types import InlineKeyboardButton, Message, CallbackQuery
+from aiogram.types import InlineKeyboardButton, Message, CallbackQuery, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import requests
 
@@ -11,18 +11,23 @@ start_router = Router()
 
 user_state = {}
 
-async def create_pay_menu(message: Message):
-    button1 = InlineKeyboardButton(text="100", callback_data="sum_100")
-    button2 = InlineKeyboardButton(text="200", callback_data="sum_200")
-    button3 = InlineKeyboardButton(text="300", callback_data="sum_300")
-    button4 = InlineKeyboardButton(text="400", callback_data="sum_400")
-    button5 = InlineKeyboardButton(text="500", callback_data="sum_500")
-    button6 = InlineKeyboardButton(text="600", callback_data="sum_600")
+prices = [
+    ("📸 3 фото", 200),
+    ("📸 5 фото", 300),
+    ("📸 10 фото", 450),
+    ("📸 25 фото", 900),
+    ("📸 50 фото", 1400),
+]
 
+def create_service_keyboard(services_with_prices):
     keyboard = InlineKeyboardBuilder()
+    for service, price in services_with_prices:
+        service_button = InlineKeyboardButton(text=service, callback_data=f"service_{service}")
+        price_button = InlineKeyboardButton(text=f"{price} ₽", callback_data=f"sum_{service}")
+        keyboard.row(service_button, price_button)
 
-    keyboard.row(button1, button2, button3, button4, button5, button6, width=2)
-    await message.answer("Выберите сумму:", reply_markup=keyboard.as_markup())
+    return keyboard
+
 
 def create_keyboard(buttons, columns=2):
     keyboard_buttons = []
@@ -83,9 +88,12 @@ async def get_invite_link(message: types.Message):
 
 @start_router.message(F.text == "💵 Купить обработки")
 async def top_balance(message: types.Message):
-    await create_pay_menu(message)
+    kb = create_service_keyboard(prices)
+    await message.answer("Выберите количество обработок:", reply_markup=kb.as_markup())
+    await message.edit_reply_markup(reply_markup=None)
 
 @start_router.callback_query(F.data == "pay_photo")
 async def top_balance(call: CallbackQuery):
-    await create_pay_menu(call.message)
+    kb = create_service_keyboard(prices)
+    await call.message.answer("Выберите количество обработок:", reply_markup=kb.as_markup())
     await call.message.edit_reply_markup(reply_markup=None)
