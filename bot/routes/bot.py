@@ -76,7 +76,7 @@ async def referals_program(message: types.Message):
     await message.answer(f"Информация о реф программе", reply_markup=keyboard)
 
 @start_router.message(F.text == "⬅️ Назад")
-async def referals_program(message: types.Message):
+async def back_menu(message: types.Message):
     buttons = ["🔞 Обработка фото", "💵 Купить обработки", "🤝 Реферальная программа", "👤 Профиль"]
     keyboard = create_keyboard(buttons, columns=1)
     await message.answer('Меню:', reply_markup=keyboard)
