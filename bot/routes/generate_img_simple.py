@@ -39,10 +39,10 @@ async def handle_photo(message: types.Message):
 
     if user_state[user_id] == 'simple':
         await handle_n8ked_photo(message)
-        await message.answer("⌛️ Обработка займет примерно 10-15 секунд, после чего бот пришлет вам результат…")
+        await message.answer("⌛️ Обработка займет примерно 10 секунд, после чего бот пришлет вам результат…")
     elif user_state[user_id] == 'smart':
         await handle_clothoff_photo(message)
-        await message.answer("⌛️ Обработка займет примерно 10 секунд, после чего бот пришлет вам результат…")
+        await message.answer("⌛️ Обработка займет примерно 10-15 секунд, после чего бот пришлет вам результат…")
 
     # Очищаем состояние после обработки
     del user_state[user_id]
