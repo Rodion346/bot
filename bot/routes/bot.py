@@ -1,7 +1,7 @@
 from aiogram import Router, F, Bot, types
 
 from aiogram.filters import Command
-from aiogram.types import InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton, Message, CallbackQuery
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 import requests
 
@@ -10,6 +10,19 @@ from config import BASE_URL_API
 start_router = Router()
 
 user_state = {}
+
+async def create_pay_menu(message: Message):
+    button1 = InlineKeyboardButton(text="100", callback_data="sum_100")
+    button2 = InlineKeyboardButton(text="200", callback_data="sum_200")
+    button3 = InlineKeyboardButton(text="300", callback_data="sum_300")
+    button4 = InlineKeyboardButton(text="400", callback_data="sum_400")
+    button5 = InlineKeyboardButton(text="500", callback_data="sum_500")
+    button6 = InlineKeyboardButton(text="600", callback_data="sum_600")
+
+    keyboard = InlineKeyboardBuilder()
+
+    keyboard.row(button1, button2, button3, button4, button5, button6, width=2)
+    await message.answer("Выберите сумму:", reply_markup=keyboard.as_markup())
 
 def create_keyboard(buttons, columns=2):
     keyboard_buttons = []
@@ -68,16 +81,10 @@ async def get_invite_link(message: types.Message):
     await message.answer(f"https://t.me/SmartNudifyAI_bot?start={message.from_user.id}")
 
 
-@start_router.message(F.text == "💵 Купить обработки" or F.data == "pay_photo")
+@start_router.message(F.text == "💵 Купить обработки")
 async def top_balance(message: types.Message):
-    button1 = InlineKeyboardButton(text="100", callback_data="sum_100")
-    button2 = InlineKeyboardButton(text="200", callback_data="sum_200")
-    button3 = InlineKeyboardButton(text="300", callback_data="sum_300")
-    button4 = InlineKeyboardButton(text="400", callback_data="sum_400")
-    button5 = InlineKeyboardButton(text="500", callback_data="sum_500")
-    button6 = InlineKeyboardButton(text="600", callback_data="sum_600")
+    await create_pay_menu(message)
 
-    keyboard = InlineKeyboardBuilder()
-
-    keyboard.row(button1, button2, button3, button4, button5, button6, width=2)
-    await message.answer("Выберите сумму:", reply_markup=keyboard.as_markup())
+@start_router.callback_query(F.data == "pay_photo")
+async def top_balance(call: CallbackQuery):
+    await create_pay_menu(call.message)

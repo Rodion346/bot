@@ -7,6 +7,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from bot.routes.generate_img_clot import router, bot
 from bot.routes.bot import start_router
 from bot.routes.generate_img_simple import simple_router
+from bot.routes.top_balance import router_balance
 
 dp = Dispatcher()
 
@@ -15,6 +16,7 @@ storage = MemoryStorage()
 dp.include_router(router)
 dp.include_router(start_router)
 dp.include_router(simple_router)
+dp.include_router(router_balance)
 
 
 async def main():
