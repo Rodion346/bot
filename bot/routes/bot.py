@@ -52,7 +52,7 @@ async def referals_program(message: types.Message):
 
 @start_router.message(F.text == "Реф ссылка")
 async def get_invite_link(message: types.Message):
-    await message.answer(f"https://t.me/I_LOVE_TbI_BOt?start={message.from_user.id}")
+    await message.answer(f"https://t.me/SmartNudifyAI_bot?start={message.from_user.id}")
 
 
 @start_router.message(F.text == "Пополнить баланс")
