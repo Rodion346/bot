@@ -107,5 +107,5 @@ async def process_start_command(callback: types.CallbackQuery):
         await callback.message.answer('💰 Пополните баланс, чтобы начать обработку', reply_markup=kb.as_markup())
     else:
         kb = await create_keyboard_clot()
-        await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer('⚙️ Укажите параметры обработки или оставьте настройки по умолчанию.', reply_markup=kb.as_markup())
+    await callback.message.edit_reply_markup(reply_markup=None)

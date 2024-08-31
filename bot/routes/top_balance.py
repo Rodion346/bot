@@ -11,4 +11,5 @@ router_balance = Router()
 @router_balance.callback_query(lambda p: 'sum_' in p.data)
 async def process_callback_button(call: CallbackQuery):
     credit = call.data.split('_')[1]
-    await call.message.answer(credit, reply_markup=None)
+    await call.message.answer(credit)
+    await call.message.edit_reply_markup(reply_markup=None)

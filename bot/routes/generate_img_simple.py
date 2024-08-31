@@ -27,6 +27,7 @@ async def process_start_command(callback: types.CallbackQuery):
         Button = InlineKeyboardButton(text='💵 Купить обработки', callback_data="pay_photo")
         kb.row(Button)
         await callback.message.answer('💰 Пополните баланс, чтобы начать обработку', reply_markup=kb.as_markup())
+    await callback.message.edit_reply_markup(reply_markup=None)
 
 
 @simple_router.message(F.photo)

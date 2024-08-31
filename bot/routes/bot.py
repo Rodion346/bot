@@ -88,4 +88,4 @@ async def top_balance(message: types.Message):
 @start_router.callback_query(F.data == "pay_photo")
 async def top_balance(call: CallbackQuery):
     await create_pay_menu(call.message)
-    await call.message.answer("", reply_markup=None)
+    await call.message.edit_reply_markup(reply_markup=None)
