@@ -7,7 +7,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.routes.bot import user_state
 from bot.routes.generate_img_clot import save_temp_file, sel
-from config import PRICE_SIMPLE, BASE_URL_API
+from config import BASE_URL_API
 
 simple_router = Router()
 
@@ -15,15 +15,14 @@ simple_router = Router()
 @simple_router.callback_query(F.data == "simple")
 async def process_start_command(callback: types.CallbackQuery):
     user_state[callback.from_user.id] = "simple"
-    r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
-    re = r.json()
-    balance = re.get("balance")
-    if int(balance) > int(PRICE_SIMPLE):
+    kb = InlineKeyboardBuilder()
+    response = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}").json()
+    balance = response.get("processing_balance")
+    if int(balance) > 1:
         await callback.message.edit_reply_markup(reply_markup=None)
         await callback.message.answer('📷 Пришлите фото для обработки.')
     else:
         await callback.message.edit_reply_markup(reply_markup=None)
-        kb = InlineKeyboardBuilder()
         Button = InlineKeyboardButton(text='💵 Купить обработки', callback_data="pay_photo")
         kb.row(Button)
         await callback.message.answer('💰 Пополните баланс, чтобы начать обработку', reply_markup=kb.as_markup())
@@ -36,7 +35,6 @@ async def handle_photo(message: types.Message):
     if user_id not in user_state:
         await message.answer("Произошла ошибка: состояние не определено.")
         return
-
     if user_state[user_id] == 'simple':
         await handle_n8ked_photo(message)
         await message.answer("⌛️ Обработка займет примерно 10 секунд, после чего бот пришлет вам результат…")
@@ -56,7 +54,7 @@ async def handle_n8ked_photo(message: types.Message):
     task_id = requests.post(f"https://use.n8ked.app/api/deepnude", headers=header, data={"image": base64_encoded})
     task_id = task_id.json()
     payload = {"img_id": task_id.get("task_id"), "user_id": f"{message.from_user.id}"}
-    r = requests.post(f"{BASE_URL_API}/api/v1/niked", params=payload)
+    requests.post(f"{BASE_URL_API}/api/v1/niked", params=payload)
 
 
 async def handle_clothoff_photo(message: types.Message):
@@ -79,5 +77,5 @@ async def handle_clothoff_photo(message: types.Message):
         "x-api-key": "f5406795d2baab5be031ca82f3ebe1f50da871c3"
     }
 
-    resp = requests.post(url, data=payload, files=files, headers=headers)
+    requests.post(url, data=payload, files=files, headers=headers)
     del sel[f"{message.from_user.id}"]

@@ -22,7 +22,7 @@ prices = [
 def create_service_keyboard(services_with_prices):
     keyboard = InlineKeyboardBuilder()
     for service, price in services_with_prices:
-        service_button = InlineKeyboardButton(text=service, callback_data=f"service_{service}")
+        service_button = InlineKeyboardButton(text=service, callback_data=f"sum_{price}")
         price_button = InlineKeyboardButton(text=f"{price} ₽", callback_data=f"sum_{price}")
         keyboard.row(service_button, price_button)
 
@@ -62,16 +62,16 @@ async def processing_image(message: types.Message):
 
 @start_router.message(F.text == "👤 Профиль")
 async def profile_info(message: types.Message):
-    r = requests.get(f"{BASE_URL_API}/api/v1/user/{message.from_user.id}")
-    re = r.json()
-    id_user = re.get("id")
-    balance = re.get("balance")
-    await message.answer(f"ID: {id_user}\nБаланс: {balance}")
+    response = requests.get(f"{BASE_URL_API}/api/v1/user/{message.from_user.id}").json()
+    id_user = response.get("id")
+    processing_balance = response.get("processing_balance")
+    referal_balance = response.get("referal_balance")
+    await message.answer(f"ID: {id_user}\nОбработки: {processing_balance}\nБаланс: {referal_balance}")
 
 
 @start_router.message(F.text == "🤝 Реферальная программа")
 async def referals_program(message: types.Message):
-    buttons = ["⬅️ Назад", "🔗 Реф ссылка"]
+    buttons = ["⬅️ Назад", "🔗 Реф ссылка", "Вывод средств"]
     keyboard = create_keyboard(buttons, columns=1)
     await message.answer(f"Информация о реф программе", reply_markup=keyboard)
 

@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQu
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from bot.routes.bot import user_state
-from config import PRICE_CLOT, BASE_URL_API, TOKEN_BOT
+from config import BASE_URL_API, TOKEN_BOT
 
 bot = Bot(token=TOKEN_BOT)
 router = Router()
@@ -97,10 +97,9 @@ async def process_send(call: CallbackQuery):
 @router.callback_query(F.data == "smart")
 async def process_start_command(callback: types.CallbackQuery):
     user_state[callback.from_user.id] = "smart"
-    r = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}")
-    re = r.json()
-    balance = re.get("balance")
-    if int(balance) < int(PRICE_CLOT):
+    response = requests.get(f"{BASE_URL_API}/api/v1/user/{callback.from_user.id}").json()
+    balance = response.get("processing_balance")
+    if int(balance) < 1:
         kb = InlineKeyboardBuilder()
         Button = InlineKeyboardButton(text='💵 Купить обработки', callback_data="pay_photo")
         kb.row(Button)
