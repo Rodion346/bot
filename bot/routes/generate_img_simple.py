@@ -32,6 +32,8 @@ async def process_start_command(callback: types.CallbackQuery):
 @simple_router.message(F.photo)
 async def handle_photo(message: types.Message):
     user_id = message.from_user.id
+    payload = {"id": f"{message.from_user.id}", "new_balance": -1, "type_balance": 1}
+    requests.post(f"{BASE_URL_API}/api/v1/user/{message.from_user.id}", params=payload).json()
     if user_id not in user_state:
         await message.answer("Произошла ошибка: состояние не определено.")
         return
