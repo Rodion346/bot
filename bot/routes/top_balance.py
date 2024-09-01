@@ -13,8 +13,8 @@ router_balance = Router()
 
 @router_balance.callback_query(lambda p: 'sum_' in p.data)
 async def process_callback_button(call: CallbackQuery):
-    credit = call.data.split('_')[1]
-    credit = credit[2].split(" ", 1)[2].strip()
+    cal_data = call.data
+    credit = cal_data.split("_")[2].split(" ", 1)[0].strip()
     payload = {"id": f"{call.from_user.id}", "new_balance": int(credit), "type_balance": 1}
     requests.post(f"{BASE_URL_API}/api/v1/user/{call.from_user.id}", json=payload).json()
     response = requests.get(f"{BASE_URL_API}/api/v1/user/{call.from_user.id}").json()
