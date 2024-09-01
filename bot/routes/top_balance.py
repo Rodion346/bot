@@ -1,3 +1,5 @@
+from pyexpat.errors import messages
+
 import requests
 from aiogram import Router
 from aiogram.types import CallbackQuery
@@ -12,6 +14,7 @@ router_balance = Router()
 @router_balance.callback_query(lambda p: 'sum_' in p.data)
 async def process_callback_button(call: CallbackQuery):
     credit = call.data.split('_')[0]
+    await call.message.answer(f"{credit}")
     credit = credit.split(" ", 1)[1]
     payload = {"id": f"{call.from_user.id}", "new_balance": int(credit), "type_balance": 1}
     requests.post(f"{BASE_URL_API}/api/v1/user/{call.from_user.id}", json=payload).json()
