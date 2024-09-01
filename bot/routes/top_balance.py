@@ -24,4 +24,4 @@ async def process_callback_button(call: CallbackQuery):
         requests.post(f"{BASE_URL_API}/api/v1/user/{call.from_user.id}", json=payload_bonus).json()
         await bot.send_message(id_user_bonus, f"Вам начислен бонус {int(int(credit) / 2)} за пополнение реферала")
         await call.message.answer(f"Баланс пополнен на {credit} обработок")
-        await call.message.edit_reply_markup(reply_markup=None)
+    await call.message.edit_reply_markup(reply_markup=None)
