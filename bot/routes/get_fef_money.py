@@ -13,7 +13,7 @@ class OrderTask(StatesGroup):
     waiting_address = State()
     waiting_bank = State()
 
-@router_get_money.message(F.text == "Вывод средств")
+@router_get_money.message(F.text == "💰 Вывод средств")
 async def process_callback_button(message: Message, state: FSMContext):
     await message.answer("Введите сумму")
     await state.set_state(OrderTask.waiting_amount)

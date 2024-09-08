@@ -52,8 +52,8 @@ async def process_start_command(message: types.Message):
 @start_router.message(F.text == "🔞 Обработка фото")
 async def processing_image(message: types.Message):
     kb = InlineKeyboardBuilder()
-    Button = InlineKeyboardButton(text='Умная', callback_data="smart")
-    Button2 = InlineKeyboardButton(text='Простая', callback_data="simple")
+    Button = InlineKeyboardButton(text='👨‍💻 Умная', callback_data="smart")
+    Button2 = InlineKeyboardButton(text='⚡️ Быстрая', callback_data="simple")
     kb.row(Button)
     kb.row(Button2)
     obr_txt = ("👨‍💻 Умная обработка позволяет выбрать параметры тела (размер груди, возраст и тд.), одежду и различные "
@@ -71,18 +71,21 @@ async def profile_info(message: types.Message):
 
 @start_router.message(F.text == "🤝 Реферальная программа")
 async def referals_program(message: types.Message):
-    buttons = ["⬅️ Назад", "🔗 Реф ссылка", "Вывод средств"]
+    buttons = ["⬅️ Назад", "🔗 Получить реферальную ссылку", "💰 Вывод средств"]
     keyboard = create_keyboard(buttons, columns=1)
-    await message.answer(f"Информация о реф программе", reply_markup=keyboard)
+    response = requests.get(f"{BASE_URL_API}/api/v1/user/{message.from_user.id}").json()
+    referal_balance = response.get("referal_balance")
+    await message.answer(f"Ваш реферальный баланс: {referal_balance}\nЕсли вы еще не получили реферальную ссылку - нажмите на кнопку\n🔗 Получить реферальную ссылку", reply_markup=keyboard)
 
 @start_router.message(F.text == "⬅️ Назад")
 async def back_menu(message: types.Message):
     buttons = ["🔞 Обработка фото", "💵 Купить обработки", "🤝 Реферальная программа", "👤 Профиль"]
     keyboard = create_keyboard(buttons, columns=1)
-    await message.answer('Меню:', reply_markup=keyboard)
+    await message.answer('', reply_markup=keyboard)
 
-@start_router.message(F.text == "🔗 Реф ссылка")
+@start_router.message(F.text == "🔗 Получить реферальную ссылку")
 async def get_invite_link(message: types.Message):
+    await message.answer("Ваша реферальная ссылка готова. Вы можете делиться ей с друзьями, публиковать в различных соцсетях (Tiktok, Reels, Shorts) или форумах. Вы будете получать 30% от сумму пополнений ваших рефералов на свой счет. Всю эту суммы вы можете получить выплатой в USDT Trc20 на свой кошелек (минимальный размер вывода 10USDT).")
     await message.answer(f"https://t.me/SmartNudifyAI_bot?start={message.from_user.id}")
 
 
