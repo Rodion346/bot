@@ -1,3 +1,5 @@
+import json
+
 import requests
 from typing import Optional, List
 
@@ -18,7 +20,6 @@ BASE_URL = "https://api.cashinout.io"
 
 AUTHORIZATION_TOKEN = "f843547c258654dc7f22d668a19f4da5"
 
-# Модель для создания одноразового счёта
 class OneTimeInvoiceRequest(BaseModel):
     amount: str
     currency: int = 0
@@ -31,17 +32,22 @@ class OneTimeInvoiceRequest(BaseModel):
 
 
 
+
 async def create_one_time_invoice(invoice):
     headers = {
         "Authorization": AUTHORIZATION_TOKEN,
     }
 
+
+    # Выполнение POST-запроса для создания одноразового счета
     response = requests.post(f"{BASE_URL}/merchant/createOneTimeInvoice", json=invoice, headers=headers)
 
     if response.status_code == 200:
-        return response.json()
+        link = response.json()
+        return link.get("data")
     else:
         raise HTTPException(status_code=response.status_code, detail=response.text)
+
 
 
 
@@ -66,17 +72,21 @@ async def process_callback_button(call: CallbackQuery):
     cal_data = call.data
     credit = cal_data.split("_")[2].split(" ")[1].strip()
     amount = cal_data.split("_")[1]
+
     data = {
-    "amount": f"{amount}",
+    "amount": amount,
     "currency": 0,
-    "currencies": [0],
+    "currencies": [
+        0
+    ],
     "durationSeconds": 86400,
-    "callbackUrl": f"{BASE_URL_API}/merchant/callback",
+    "callbackUrl": f"http://37.1.192.98/merchant/callback",
     "redirectUrl": "https://t.me/SmartNudifyAI_bot",
     "externalText": f"{call.from_user.id}_{credit}"
     }
+
     link_pay = await create_one_time_invoice(data)
     kb = InlineKeyboardBuilder()
-    Button = InlineKeyboardButton(text='Оплатить', url=f"{BASE_URL}/{link_pay}")
+    Button = InlineKeyboardButton(text='Оплатить', url=f"https://pay.cashinout.io/{link_pay}")
     kb.row(Button)
     await call.message.edit_reply_markup(reply_markup=kb.as_markup())

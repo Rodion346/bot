@@ -12,7 +12,7 @@ start_router = Router()
 user_state = {}
 
 prices = [
-    ("📸 3 фото", 10),
+    ("📸 3 фото", 200),
     ("📸 5 фото", 300),
     ("📸 10 фото", 450),
     ("📸 25 фото", 900),
@@ -81,7 +81,7 @@ async def referals_program(message: types.Message):
 async def back_menu(message: types.Message):
     buttons = ["🔞 Обработка фото", "💵 Купить обработки", "🤝 Реферальная программа", "👤 Профиль"]
     keyboard = create_keyboard(buttons, columns=1)
-    await message.edit_reply_markup(reply_markup=keyboard)
+    await message.answer("💬 Выберите действие.", reply_markup=keyboard)
 
 @start_router.message(F.text == "🔗 Получить реферальную ссылку")
 async def get_invite_link(message: types.Message):
