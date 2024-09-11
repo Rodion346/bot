@@ -31,14 +31,12 @@ class OneTimeInvoiceRequest(BaseModel):
 
 
 
-async def create_one_time_invoice(invoice: OneTimeInvoiceRequest):
+async def create_one_time_invoice(invoice):
     headers = {
         "Authorization": AUTHORIZATION_TOKEN,
     }
 
-    body = invoice.dict()
-
-    response = requests.post(f"{BASE_URL}/merchant/createOneTimeInvoice", json=body, headers=headers)
+    response = requests.post(f"{BASE_URL}/merchant/createOneTimeInvoice", json=invoice, headers=headers)
 
     if response.status_code == 200:
         return response.json()
@@ -77,8 +75,7 @@ async def process_callback_button(call: CallbackQuery):
     "redirectUrl": "",
     "externalText": f"{call.from_user.id}_{credit}"
     }
-    inv = OneTimeInvoiceRequest(**data)
-    link_pay = await create_one_time_invoice(inv)
+    link_pay = await create_one_time_invoice(data)
     kb = InlineKeyboardBuilder()
     Button = InlineKeyboardButton(text='Оплатить', url=f"{BASE_URL}/{link_pay}")
     kb.row(Button)
