@@ -72,7 +72,7 @@ async def process_callback_button(call: CallbackQuery):
     "currencies": [0],
     "durationSeconds": 86400,
     "callbackUrl": f"{BASE_URL_API}/merchant/callback",
-    "redirectUrl": "",
+    "redirectUrl": "https://t.me/SmartNudifyAI_bot",
     "externalText": f"{call.from_user.id}_{credit}"
     }
     link_pay = await create_one_time_invoice(data)
